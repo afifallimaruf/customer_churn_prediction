@@ -1,0 +1,28 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python3 src/data_ingest.py
+    deps:
+    - path: dataset/raw/Telco-Customer-Churn.zip
+      md5: da6ec8e23689205887e9226246d3c122
+      size: 175758
+    - path: src/data_ingest.py
+      md5: 0e2f63597cd7cd8e5b82370d28606cae
+      size: 2875
+    outs:
+    - path: dataset/extracted_data/Telco-Customer-Churn.csv
+      md5: 3b0bfab28a8101b4e4fdd08025a5c235
+      size: 977501
+  preprocess:
+    cmd: python3 src/data_preprocessing.py
+    deps:
+    - path: dataset/extracted_data/Telco-Customer-Churn.csv
+      md5: 3b0bfab28a8101b4e4fdd08025a5c235
+      size: 977501
+    - path: src/data_preprocessing.py
+      md5: bbeb493762770c81d1ececeb6fdd52c3
+      size: 1465
+    outs:
+    - path: dataset/processed/processed_data.csv
+      md5: 4b281f0034f7c8b2711f65e62bf54b17
+      size: 635058

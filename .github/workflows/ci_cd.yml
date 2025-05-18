@@ -1,0 +1,41 @@
+name: CI/CD Pipline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Install dependecies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Install DVC
+        run: |
+          pip install dvc
+      - name: Pull data with DVC
+        run: |
+          dvc pull
+      - name: Run preprocessing
+        run: |
+          dvc repro preprocess
+      - name: Train models
+        run: |
+          python src/model_training.py
+      - name: Evaluate models
+        run: |
+          python src/model_evaluation.py
+      - name: Deploy to streamlit
+        env:
+          STREAMLIT_API_KEY: ${{secrets.STREAMLIT_API_KEY}}
+        run: |
+          pip install streamlit
+          streamlit run src/app.py --server.headless true

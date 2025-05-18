@@ -1,0 +1,15 @@
+stages:
+  ingest:
+    cmd: python3 src/data_ingest.py
+    deps:
+      - dataset/raw/Telco-Customer-Churn.zip
+      - src/data_ingest.py
+    outs:
+      - dataset/extracted_data/Telco-Customer-Churn.csv
+  preprocess:
+    cmd: python3 src/data_preprocessing.py
+    deps:
+      - dataset/extracted_data/Telco-Customer-Churn.csv
+      - src/data_preprocessing.py
+    outs:
+      - dataset/processed/processed_data.csv
